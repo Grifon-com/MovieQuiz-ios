@@ -146,7 +146,7 @@ final class MovieQuizViewController: UIViewController {
             // обнуляем счетчик правильных ответов
             self.correctAnswers = 0
             
-            // заново показываем первый вопрос
+            // заново показываем первый вопрос 
             self.show(quiz: self.convert(model: self.questions[self.currentQuestionIndex]))
         })
         alert.addAction(action)
