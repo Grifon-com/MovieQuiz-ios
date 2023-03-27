@@ -39,6 +39,11 @@ final class MovieQuizViewController: UIViewController {
     
     @IBOutlet private var textLabel: UILabel!
     
+    @IBOutlet private var buttonYes: UIButton!
+    
+    @IBOutlet private var buttonNo: UIButton!
+    
+    
     // массив вопросов
     private let questions: [QuizQuestion] =
     [QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 9,2?", correctAnswer: true),
@@ -78,16 +83,22 @@ final class MovieQuizViewController: UIViewController {
     // приватный метод, который меняет цвет рамки
     // принимает на вход булевое значение и ничего не возвращает
     private func showAnswerResult(isCorrect: Bool) {
+        //отключаем кнопки во избежание множественного нажатия и некорректной работы
+        buttonYes.isEnabled = false
+        buttonNo.isEnabled = false
         if isCorrect {
             correctAnswers += 1
         }
         
         frameDrawing()
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-            
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.showNextQuestionOrResults()
-                self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
+            self.showNextQuestionOrResults()
+            self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
+            // после выдержки включаем кнопки обратно
+            self.buttonYes.isEnabled = true
+            self.buttonNo.isEnabled = true
         }
         
     }

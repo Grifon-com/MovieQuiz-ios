@@ -32,7 +32,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="23.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вопрос:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UVB-y4-0cD" userLabel="Question Title Lable">
-                                                <rect key="frame" x="0.0" y="0.0" width="319" height="23.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="314.5" height="23.5"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor">
                                                     <string key="name">
@@ -41,7 +41,7 @@ YP White</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="1/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tM-rv-utI" userLabel="Index Lable">
-                                                <rect key="frame" x="338" y="0.0" width="36" height="23.5"/>
+                                                <rect key="frame" x="333.5" y="0.0" width="40.5" height="23.5"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor">
                                                     <string key="name">
@@ -131,6 +131,8 @@ YP White</string>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="buttonNo" destination="tIy-ga-3U1" id="6Bj-L2-lg2"/>
+                        <outlet property="buttonYes" destination="qrJ-E3-ecz" id="pc7-7n-BYV"/>
                         <outlet property="countLabel" destination="7tM-rv-utI" id="00a-vR-N0S"/>
                         <outlet property="imageView" destination="ESm-82-GJo" id="wq1-qH-ggo"/>
                         <outlet property="textLabel" destination="isU-D1-GPi" id="1MB-th-rr9"/>
