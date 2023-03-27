@@ -43,6 +43,13 @@ final class MovieQuizViewController: UIViewController {
     
     @IBOutlet private var buttonNo: UIButton!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        //показываем первый вопрос
+        show(quiz: convert(model: questions[currentQuestionIndex]))
+        frameDrawing()
+        self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
+    }
     
     // массив вопросов
     private let questions: [QuizQuestion] =
@@ -57,8 +64,6 @@ final class MovieQuizViewController: UIViewController {
      QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма больше чем 5,1?", correctAnswer: false),
      QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 5,8?", correctAnswer: false)
     ]
-    
-    
     
     // переменная с индексом текущего вопроса, начальное значение 0
     // (по этому индексу будем искать вопрос в массиве, где индекс первого элемента 0, а не 1)
@@ -80,7 +85,7 @@ final class MovieQuizViewController: UIViewController {
         textLabel.text = step.question
     }
     
-    // приватный метод, который меняет цвет рамки
+    // приватный метод, который меняет цвет рамки, отключает и включает кнопки "ДА" и "НЕТ"
     // принимает на вход булевое значение и ничего не возвращает
     private func showAnswerResult(isCorrect: Bool) {
         //отключаем кнопки во избежание множественного нажатия и некорректной работы
@@ -96,7 +101,6 @@ final class MovieQuizViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
             self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
-            // после выдержки включаем кнопки обратно
             self.buttonYes.isEnabled = true
             self.buttonNo.isEnabled = true
         }
@@ -117,38 +121,14 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: convert(model: questions[currentQuestionIndex]))
         }
     }
-    //  функция отрисовки рамки
+    //  метод отрисовки рамки
     private func frameDrawing() {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = 20
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        //показываем первый вопрос
-        show(quiz: convert(model: questions[currentQuestionIndex]))
-        frameDrawing()
-        self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
-    }
-    
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions[currentQuestionIndex] // 1
-        let givenAnswer = true // 2
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
-    
-    
-    @IBAction  private func noButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions[currentQuestionIndex] // 1
-        let givenAnswer = false // 2
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
-    
-    
-    //функция создания алерта и обнуления игры g
+    //функция создания алерта и обнуления игры
     private func showAlert(quiz result:QuizResultsViewModel) {
         let alert = UIAlertController(
             title: result.title,
@@ -169,6 +149,19 @@ final class MovieQuizViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        let currentQuestion = questions[currentQuestionIndex] // 1
+        let givenAnswer = true // 2
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    @IBAction  private func noButtonClicked(_ sender: UIButton) {
+        let currentQuestion = questions[currentQuestionIndex] // 1
+        let givenAnswer = false // 2
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
 }
 
 
