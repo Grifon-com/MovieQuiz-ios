@@ -47,6 +47,7 @@ final class MovieQuizViewController: UIViewController {
         super.viewDidLoad()
         //показываем первый вопрос
         show(quiz: convert(model: questions[currentQuestionIndex]))
+        //отрисовываем рамку и красим в цвет View
         frameDrawing()
         self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
     }
@@ -74,11 +75,14 @@ final class MovieQuizViewController: UIViewController {
     
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        let questionStep = QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(), question: model.text, questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
+        let questionStep = QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(),
+                                             question: model.text,
+                                             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
         return questionStep
     }
     
-    // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
+    // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса
+    //и ничего не возвращает
     private func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         countLabel.text = step.questionNumber
@@ -110,12 +114,12 @@ final class MovieQuizViewController: UIViewController {
     // приватный метод, который содержит логику перехода в один из сценариев
     // метод ничего не принимает и ничего не возвращает
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questions.count - 1 { // 1
+        if currentQuestionIndex == questions.count - 1 {
             // идём в состояние "Результат квиза"
             let textResult = "Ваш результат \(correctAnswers)/\(questions.count)"
             let viewModel = QuizResultsViewModel(title: "Этот раунд окончен", text: textResult, buttonText: "Сыграть еще раз")
             showAlert(quiz: viewModel)
-        } else { // 2
+        } else {
             currentQuestionIndex += 1
             // идём в состояние "Вопрос показан"
             show(quiz: convert(model: questions[currentQuestionIndex]))
@@ -141,6 +145,7 @@ final class MovieQuizViewController: UIViewController {
             
             // обнуляем счетчик правильных ответов
             self.correctAnswers = 0
+            
             // заново показываем первый вопрос
             self.show(quiz: self.convert(model: self.questions[self.currentQuestionIndex]))
         })
@@ -150,15 +155,15 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions[currentQuestionIndex] // 1
-        let givenAnswer = true // 2
+        let currentQuestion = questions[currentQuestionIndex]
+        let givenAnswer = true
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
     @IBAction  private func noButtonClicked(_ sender: UIButton) {
-        let currentQuestion = questions[currentQuestionIndex] // 1
-        let givenAnswer = false // 2
+        let currentQuestion = questions[currentQuestionIndex]
+        let givenAnswer = false
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
