@@ -39,19 +39,6 @@ final class MovieQuizViewController: UIViewController {
     
     @IBOutlet private var textLabel: UILabel!
     
-    @IBOutlet private var buttonYes: UIButton!
-    
-    @IBOutlet private var buttonNo: UIButton!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        //показываем первый вопрос
-        show(quiz: convert(model: questions[currentQuestionIndex]))
-        //отрисовываем рамку и красим в цвет View
-        frameDrawing()
-        self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
-    }
-    
     // массив вопросов
     private let questions: [QuizQuestion] =
     [QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 9,2?", correctAnswer: true),
@@ -73,6 +60,15 @@ final class MovieQuizViewController: UIViewController {
     // переменная со счётчиком правильных ответов, начальное значение закономерно 0
     private var correctAnswers = 0
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        //показываем первый вопрос
+        show(quiz: convert(model: questions[currentQuestionIndex]))
+        //отрисовываем рамку и красим в цвет View
+        frameDrawing()
+        self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
+    }
+    
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(),
@@ -93,8 +89,7 @@ final class MovieQuizViewController: UIViewController {
     // принимает на вход булевое значение и ничего не возвращает
     private func showAnswerResult(isCorrect: Bool) {
         //отключаем кнопки во избежание множественного нажатия и некорректной работы
-        buttonYes.isEnabled = false
-        buttonNo.isEnabled = false
+        view.isUserInteractionEnabled = false
         if isCorrect {
             correctAnswers += 1
         }
@@ -105,8 +100,7 @@ final class MovieQuizViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
             self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
-            self.buttonYes.isEnabled = true
-            self.buttonNo.isEnabled = true
+            self.view.isUserInteractionEnabled = true
         }
         
     }
