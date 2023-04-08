@@ -131,8 +131,6 @@ YP White</string>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="buttonNo" destination="tIy-ga-3U1" id="6Bj-L2-lg2"/>
-                        <outlet property="buttonYes" destination="qrJ-E3-ecz" id="pc7-7n-BYV"/>
                         <outlet property="countLabel" destination="7tM-rv-utI" id="00a-vR-N0S"/>
                         <outlet property="imageView" destination="ESm-82-GJo" id="wq1-qH-ggo"/>
                         <outlet property="textLabel" destination="isU-D1-GPi" id="1MB-th-rr9"/>
