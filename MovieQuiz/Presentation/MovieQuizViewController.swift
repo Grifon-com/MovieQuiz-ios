@@ -113,7 +113,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                                             self.questionFactory?.requestNextQuestion()})
             
             // передаем контроллер и AlertModel в функцию делегата
-            delegate?.showAlert(modelAlert: viewAlertModel, vc: self)
+            delegate?.showAlert(viewAlertModel: viewAlertModel, vc: self)
         } else {
             currentQuestionIndex += 1
             // идём в состояние "Вопрос показан"
