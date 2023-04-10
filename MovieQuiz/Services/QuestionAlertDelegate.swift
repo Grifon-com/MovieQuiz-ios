@@ -1,5 +1,5 @@
 import Foundation
 
-protocol QuestionAlertDelegate {
-    func showAlert
+protocol QuestionAlertDelegate: AnyObject {
+    func showAlert(modelAlert: AlertModel, vc: MovieQuizViewController)
 }
