@@ -113,7 +113,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                                             self.questionFactory?.requestNextQuestion()})
             
             // передаем контроллер и AlertModel в функцию делегата
-            delegate?.showAlert(viewAlertModel: viewAlertModel, vc: self)
+            delegate?.showAlert(modelAlert: viewAlertModel, vc: self)
         } else {
             currentQuestionIndex += 1
             // идём в состояние "Вопрос показан"
@@ -209,7 +209,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
  Настоящий рейтинг: 5,8
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: НЕТ
- */
+ 
  Картинка: Vivarium
  Настоящий рейтинг: 5,8
  Вопрос: Рейтинг этого фильма больше чем 6?
