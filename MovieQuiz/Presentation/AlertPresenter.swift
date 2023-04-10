@@ -9,7 +9,7 @@ class AlertPresenter: QuestionAlertDelegate {
     }
     
     // метод показа Алерта
-    func showAlert(modelAlert: AlertModel,  vc: MovieQuizViewController) {
+    func showAlert(modelAlert: AlertModel,  vc: UIViewController) {
             let alert = UIAlertController(
                 title: modelAlert.title,
                 message: modelAlert.message,
