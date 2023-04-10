@@ -9,11 +9,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     @IBOutlet private var textLabel: UILabel!
     
-    weak var alertDelegate: 
+    weak var delegate: QuestionAlertDelegate?
     
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
+    private var alertPresenter: AlertPresenter?
     
     // переменная с индексом текущего вопроса, начальное значение 0
     // (по этому индексу будем искать вопрос в массиве, где индекс первого элемента 0, а не 1)
@@ -25,7 +26,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //назначаем делегата
+        //создаем экземпляр alertPresenter
+        alertPresenter = AlertPresenter()
+        //вызываем функцию назначения делегата
+        alertPresenter?.appointDelegate(vc: self)
+        
+        //инъецируем делегата
         questionFactory = QuestionFactory(delegate: self)
         
         //показываем первый вопрос
@@ -83,7 +89,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
             self.view.isUserInteractionEnabled = true
         }
-        
     }
     
     // приватный метод, который содержит логику перехода в один из сценариев
@@ -93,8 +98,22 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             let text = correctAnswers == questionsAmount ?
                     "Поздравляем, Вы ответили на 10 из 10!" :
                     "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
-            let viewModel = QuizResultsViewModel(title: "Этот раунд окончен", text: text, buttonText: "Сыграть еще раз")
-            showAlert(quiz: viewModel)
+            //создаем AlertModel
+            let viewAlertModel = AlertModel(title: "Этот раунд окончен",
+                                            message: text,
+                                            buttonText: "Сыграть еще раз",
+                                            completion: {
+                                            // обнуляем индекс текущего вопроса
+                                            self.currentQuestionIndex = 0
+                
+                                            // обнуляем счетчик правильных ответов
+                                            self.correctAnswers = 0
+                
+                                            // заново показываем первый вопрос
+                                            self.questionFactory?.requestNextQuestion()})
+            
+            // передаем контроллер и AlertModel в функцию делегата
+            delegate?.showAlert(modelAlert: viewAlertModel, vc: self)
         } else {
             currentQuestionIndex += 1
             // идём в состояние "Вопрос показан"
@@ -106,30 +125,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = 20
-    }
-    
-    //функция создания алерта и обнуления игры
-    private func showAlert(quiz result:QuizResultsViewModel) {
-        let alert = UIAlertController(
-            title: result.title,
-            message: result.text,
-            preferredStyle: .alert)
-        
-        let action = (UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            
-            // обнуляем индекс текущего вопроса
-            self.currentQuestionIndex = 0
-            
-            // обнуляем счетчик правильных ответов
-            self.correctAnswers = 0
-            
-            // заново показываем первый вопрос 
-            self.questionFactory?.requestNextQuestion()
-        })
-        alert.addAction(action)
-        
-        self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
@@ -210,6 +205,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
  Ответ: НЕТ
 
 
+ Картинка: Vivarium
+ Настоящий рейтинг: 5,8
+ Вопрос: Рейтинг этого фильма больше чем 6?
+ Ответ: НЕТ
+ */
  Картинка: Vivarium
  Настоящий рейтинг: 5,8
  Вопрос: Рейтинг этого фильма больше чем 6?
