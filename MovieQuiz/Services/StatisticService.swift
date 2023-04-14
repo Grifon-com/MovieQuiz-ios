@@ -8,9 +8,6 @@ protocol StatisticService {
 }
 
 final class StatisticServiceImplementation: StatisticService {
-    func store(correct count: Int, total amount: Int) {
-        <#code#>
-    }
     
     private enum Keys: String {
         case correct, total, bestGame, gamesCount
@@ -49,4 +46,41 @@ final class StatisticServiceImplementation: StatisticService {
             userDefaults.set(data, forKey: Keys.gamesCount.rawValue)
         }
     }
+    
+    var bestGame: GameRecord {
+        get {
+            guard let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
+                let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
+                return .init(correct: 0, total: 0)
+            }
+            return record
+        }
+        set {
+            guard let data = try? JSONEncoder().encode(newValue) else {
+                print("Невозможно сохранить результат")
+                return
+            }
+            userDefaults.set(data, forKey: Keys.bestGame.rawValue)
+        }
+    }
+    
+    func store(correct count: Int, total amount: Int) {
+        let currentGame = GameRecord(correct: count, total: amount)
+        if currentGame > bestGame {
+            bestGame = currentGame
+        }
+    }
+}
+
+// MARK: - GameRecord
+struct GameRecord: Codable, Comparable {
+    static func < (lhs: GameRecord, rhs: GameRecord) -> Bool {
+        lhs.correct < rhs.correct
+    }
+    
+    var correct: Int
+    var total: Int
+    var date = Date().dateTimeString
+}
+
 }
