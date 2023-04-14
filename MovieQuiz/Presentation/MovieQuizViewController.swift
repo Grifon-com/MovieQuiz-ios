@@ -26,8 +26,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         //создаем экземпляр alertPresenter
         alertPresenter = AlertPresenter()
-        //вызываем функцию назначения делегата
-        alertPresenter?.appointDelegate(vc: self)
         
         //инъецируем делегата
         questionFactory = QuestionFactory(delegate: self)
