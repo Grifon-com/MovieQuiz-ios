@@ -13,12 +13,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenter?
+    private var statistic: StatisticService?
     
-    // переменная с индексом текущего вопроса, начальное значение 0
-    // (по этому индексу будем искать вопрос в массиве, где индекс первого элемента 0, а не 1)
+    /*
+    переменная с индексом текущего вопроса, начальное значение 0
+    (по этому индексу будем искать вопрос в массиве, где индекс первого элемента
+     0, а не 1)
+     */
+    
     private var currentQuestionIndex = 0
     
-    // переменная со счётчиком правильных ответов, начальное значение закономерно 0
+    // переменная со счётчиком правильных ответов, начальное значение 0
     private var correctAnswers = 0
     
     override func viewDidLoad() {
@@ -61,16 +66,20 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         return questionStep
     }
     
-    // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса
-    //и ничего не возвращает
+    /*
+    приватный метод вывода на экран вопроса, который принимает на вход вью
+    модель вопроса и ничего не возвращает
+     */
     private func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         countLabel.text = step.questionNumber
         textLabel.text = step.question
     }
     
-    // приватный метод, который меняет цвет рамки, отключает и включает кнопки "ДА" и "НЕТ"
-    // принимает на вход булевое значение и ничего не возвращает
+    /*
+     приватный метод, который меняет цвет рамки, отключает и включает кнопки
+     "ДА" и "НЕТ" принимает на вход булевое значение и ничего не возвращает
+     */
     private func showAnswerResult(isCorrect: Bool) {
         //отключаем кнопки во избежание множественного нажатия и некорректной работы
         view.isUserInteractionEnabled = false
@@ -90,8 +99,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
     }
     
-    // приватный метод, который содержит логику перехода в один из сценариев
-    // метод ничего не принимает и ничего не возвращает
+    /*
+    приватный метод, который содержит логику перехода в один из сценариев
+    метод ничего не принимает и ничего не возвращает
+    */
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
             
