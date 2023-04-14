@@ -36,7 +36,7 @@ final class StatisticServiceImplementation: StatisticService {
         get {
             guard let data = userDefaults.data(forKey: Keys.gamesCount.rawValue),
                   let recordGamesCount = try? JSONDecoder().decode(Int.self, from: data) else {
-            return .init(1)
+                return .init(1)
             }
             return recordGamesCount
         }
@@ -52,7 +52,7 @@ final class StatisticServiceImplementation: StatisticService {
     var bestGame: GameRecord {
         get {
             guard let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
-                let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
+                  let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
                 return .init(correct: 0, total: 0)
             }
             return record
@@ -83,6 +83,4 @@ struct GameRecord: Codable, Comparable {
     var correct: Int
     var total: Int
     var date = Date().dateTimeString
-}
-
 }
