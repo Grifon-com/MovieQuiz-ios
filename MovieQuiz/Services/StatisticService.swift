@@ -13,6 +13,8 @@ final class StatisticServiceImplementation: StatisticService {
         case correct, total, bestGame, gamesCount
     }
     
+    private let userDefaults = UserDefaults.standard
+    
     var totalAccuracy: Double {
         get {
             guard let data = userDefaults.data(forKey: Keys.total.rawValue),
