@@ -95,14 +95,41 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // метод ничего не принимает и ничего не возвращает
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
-            let text = correctAnswers == questionsAmount ?
-                    "Поздравляем, Вы ответили на 10 из 10!" :
-                    "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+            
+            //извлекаем опционал
+            guard var statistic = statistic else { return }
+            
+            //метод сравнения текущего результата игры с сохраненным
+            statistic.store(correct: correctAnswers, total: questionsAmount)
+            
+            //увеличиваем общее количество сыгранных игр на 1
+            statistic.gamesCount = 1
+            
+            /*
+             если игра запущена первый раз statistic.totalAccuracy будет назначен автоматически из результатов statistic.bestGame, если не первый, то к сохраненным результатам каждый раз будет прибавляться текущий результат для отображения статистики в алерте
+             */
+            if statistic.gamesCount != 1 {
+                statistic.totalAccuracy = Double(correctAnswers) / Double(questionsAmount)
+            }
+            
+            //высчитываем среднюю точность в процентах
+            let st = (Double(statistic.totalAccuracy) / Double(statistic.gamesCount)) * 100
+            
+            // константа для упрощения обращения к statistic.bestGame
+            let record = statistic.bestGame
+            
+            //текст для Alert.message
+            let text = "Ваш результат: \(correctAnswers)/\(questionsAmount)\n Количество сыгранных квизов: \(String(describing: statistic.gamesCount))\nРекорд: \(record.correct)/\(record.total) (\(record.date))\nСредняя точность: \(String(format: "%.2f", st))%"
+            
+            
             //создаем AlertModel
-            let viewAlertModel = AlertModel(title: "Этот раунд окончен",
+            let viewAlertModel = AlertModel(title: "Этот раунд окончен!",
                                             message: text,
                                             buttonText: "Сыграть еще раз",
-                                            completion: {
+                                            //completion hendler для действия по нажатию на кнопку алерта
+                                            completion: { [weak self] in
+                                            guard let self = self else {return}
+                
                                             // обнуляем индекс текущего вопроса
                                             self.currentQuestionIndex = 0
                 
@@ -112,8 +139,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                                             // заново показываем первый вопрос
                                             self.questionFactory?.requestNextQuestion()})
             
-            // передаем контроллер и AlertModel в функцию делегата
-            delegate?.showAlert(modelAlert: viewAlertModel, vc: self)
+            alertPresenter?.showAlert(modelAlert: viewAlertModel, vc: self)
         } else {
             currentQuestionIndex += 1
             // идём в состояние "Вопрос показан"
