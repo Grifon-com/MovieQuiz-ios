@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
 
-protocol QuestionAlertDelegate: AnyObject {
+protocol QuestionAlertProtocol: AnyObject {
     func showAlert(modelAlert: AlertModel, vc: UIViewController)
 }
