@@ -3,11 +3,6 @@ import UIKit
 
 class AlertPresenter: QuestionAlertDelegate {
     
-    // метод назначения делегата
-    func appointDelegate(vc: MovieQuizViewController) {
-        vc.delegate = self
-    }
-    
     // метод показа Алерта
     func showAlert(modelAlert: AlertModel,  vc: UIViewController) {
             let alert = UIAlertController(
