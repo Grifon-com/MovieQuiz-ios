@@ -27,6 +27,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         //создаем экземпляр alertPresenter
         alertPresenter = AlertPresenter()
         
+        //создаем экземпляр класса StatisticServiceImplementation
+        statistic = StatisticServiceImplementation()
+        
         //инъецируем делегата
         questionFactory = QuestionFactory(delegate: self)
         

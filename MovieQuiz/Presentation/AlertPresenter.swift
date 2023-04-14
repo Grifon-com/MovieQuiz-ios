@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class AlertPresenter: QuestionAlertProtocol {
+class AlertPresenter {
     
     // метод показа Алерта
     func showAlert(modelAlert: AlertModel, vc: UIViewController) {
