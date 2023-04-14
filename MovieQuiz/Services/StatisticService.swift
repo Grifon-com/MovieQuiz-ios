@@ -12,11 +12,6 @@ final class StatisticServiceImplementation: StatisticService {
         <#code#>
     }
     
-    var totalAccuracy: Double
-    
-    var gamesCount: Int 
-    
-    
     private enum Keys: String {
         case correct, total, bestGame, gamesCount
     }
