@@ -1,17 +1,25 @@
 import Foundation
 import UIKit
 
-class AlertPresenter: QuestionAlertProtocol{
+class AlertPresenter: QuestionAlertProtocol {
     
     // метод показа Алерта
-    func showAlert(modelAlert: AlertModel,  vc: UIViewController) {
+    func showAlert(modelAlert: AlertModel, vc: UIViewController) {
+            //создаем алерт
             let alert = UIAlertController(
                 title: modelAlert.title,
                 message: modelAlert.message,
                 preferredStyle: .alert)
             
-        let action = UIAlertAction(title: modelAlert.buttonText, style: .default) { _ in modelAlert.completion() }
+            // действие по кнопке алерта
+            let action = UIAlertAction(title: modelAlert.buttonText, style: .default) { _ in
+                //ативируем completion hendler
+                modelAlert.completion()}
+        
+            //добавляем кнопку к алерту
             alert.addAction(action)
-            vc.present(alert, animated: true, completion: nil)
+        
+            //разрешаем показ алерта
+        vc.present(alert, animated: true, completion: nil)
     }
 }
