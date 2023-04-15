@@ -3,11 +3,11 @@ import UIKit
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Lifecycle
     
-    @IBOutlet private var imageView: UIImageView!
+    @IBOutlet private weak var imageView: UIImageView!
     
-    @IBOutlet private var countLabel: UILabel!
+    @IBOutlet private weak var countLabel: UILabel!
     
-    @IBOutlet private var textLabel: UILabel!
+    @IBOutlet private weak var textLabel: UILabel!
     
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
@@ -42,7 +42,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.requestNextQuestion()
         //отрисовываем рамку и красим в цвет View
         frameDrawing()
-        self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
+        self.imageView.layer.borderColor = UIColor.clear.cgColor
     }
     
     // MARK: - QuestionFactoryDelegate
