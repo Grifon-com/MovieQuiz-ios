@@ -28,6 +28,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // переменная со счётчиком правильных ответов, начальное значение 0
     private var correctAnswers = 0
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -105,6 +106,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     приватный метод, который содержит логику перехода в один из сценариев
     метод ничего не принимает и ничего не возвращает
     */
+    
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
             
@@ -165,10 +167,36 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.cornerRadius = 20
     }
     
+    // MARK: - AlertError
+    
+    //функция отображения алерта с ошибкой
+    private func showNetworkError(message: String) {
+        let alertErrorViewModel = AlertModel(title: "Ошибка",
+                                             message: message,
+                                             buttonText: "Попробовать ещё раз",
+                                             completion: {[weak self] in
+                                                        guard let self = self else {return}
+
+                                                        // обнуляем индекс текущего вопроса
+                                                        self.currentQuestionIndex = 0
+
+                                                        // обнуляем счетчик правильных ответов
+                                                        self.correctAnswers = 0
+
+                                                        // заново показываем первый вопрос
+                                                        self.questionFactory?.requestNextQuestion()})
+        alertPresenter?.showAlert(modelAlert: alertErrorViewModel, vc: self)
+    }
+    
     //медо показа индикатора загрузки
     private func showLoadingIndicator() {
         activitiIndicator.isHidden = false //индикатор загрузки не скрыт
         activitiIndicator.startAnimating() // включаем анимацию
+    }
+    
+    //метод скрытия индикатора загрузки
+    private func hideLoadingIndicator() {
+        activitiIndicator.isHidden = true
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
