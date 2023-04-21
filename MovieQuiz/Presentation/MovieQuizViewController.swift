@@ -183,6 +183,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                                                         // обнуляем счетчик правильных ответов
                                                         self.correctAnswers = 0
 
+            
                                                         // заново показываем первый вопрос
                                                         self.questionFactory?.requestNextQuestion()})
         alertPresenter?.showAlert(modelAlert: alertErrorViewModel, vc: self)
