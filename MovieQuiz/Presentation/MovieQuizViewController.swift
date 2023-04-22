@@ -39,10 +39,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         statistic = StatisticServiceImplementation()
         
         //инъецируем делегата
-        questionFactory = QuestionFactory(moviesLoader: <#MoviesLoading#>, delegate: self)
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader() , delegate: self)
+        
+        showLoadingIndicator()
+        questionFactory?.loadData()
         
         //показываем первый вопрос
-        questionFactory?.requestNextQuestion()
+        //questionFactory?.requestNextQuestion()
+        
         //отрисовываем рамку и красим в цвет View
         frameDrawing()
         self.imageView.layer.borderColor = UIColor.clear.cgColor
