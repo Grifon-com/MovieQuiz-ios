@@ -26,6 +26,20 @@ class QuestionFactory: QuestionFactoryProtocol {
         self.delegate = delegate
     }
     
+    func loadData() {
+        moviesLoder.loadMovies {[weak self] result in
+            guard let self = self else { return }
+            switch result {
+                
+            case .success(let mostPopularMovies):
+                self.movies = mostPopularMovies.items // сохраняем фильм в нашу новую переменную
+                self.delegate?.didLoadDataFromServer() // сообщаем, что данные загрузились
+            case .failure(let error):
+                self.delegate?.didFailToLoadData(with: error)
+            }
+        }
+    }
+    
     //получаем случайный вопрос
     func requestNextQuestion() {
         guard let index = (0..<questions.count).randomElement() else {

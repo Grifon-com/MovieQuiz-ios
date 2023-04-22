@@ -25,13 +25,20 @@ struct MoviesLoader: MoviesLoading {
         return url
     }
     
+    /*
+     public enum Result<Success, Failure> where Failure : Error {
+         case success(Success)
+         case failure(Failure)
+     }
+     */
+    
     func loadMovies(handler: @escaping (Result<MostPopularMovies, Error>) -> Void) {
         networkClient.fech(url: mostPopularMoviesUrl) { result in
             switch result {
             case .success(let data):
                 do {
-                    let mostPopularMovies = try JSONDecoder().decode(MostPopularMovies.self, from: data)
-                    handler(.success(mostPopularMovies))
+                    let mostPopularMovie = try JSONDecoder().decode(MostPopularMovies.self, from: data)
+                    handler(.success(mostPopularMovie))
                 } catch {
                     handler(.failure(error))
                 }
