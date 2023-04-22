@@ -1,10 +1,12 @@
 import Foundation
 
 class QuestionFactory: QuestionFactoryProtocol {
+    private let moviesLoder: MoviesLoading
+    private weak var delegate: QuestionFactoryDelegate?
     
-    weak var delegate: QuestionFactoryDelegate?
+    private var movies: [MostPopularMovie] = []
 
-    // массив вопросов
+    /* массив вопросов
     private let questions: [QuizQuestion] =
     [QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 9,2?", correctAnswer: true),
      QuizQuestion(image: "The Dark Knight", text: "Рейтинг этого фильма больше чем 9?", correctAnswer: true),
@@ -17,8 +19,10 @@ class QuestionFactory: QuestionFactoryProtocol {
      QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма больше чем 5,1?", correctAnswer: false),
      QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 5,8?", correctAnswer: false)
     ]
+     */
     
-    init(delegate: QuestionFactoryDelegate) {
+    init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
+        self.moviesLoder = moviesLoader
         self.delegate = delegate
     }
     

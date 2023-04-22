@@ -61,6 +61,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self?.show(quiz: viewModel)
         }
     }
+    
+    func didLoadDataFromServer() {
+        activitiIndicator.isHidden = true // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion() // показывем первый вопрос
+    }
+
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(),
