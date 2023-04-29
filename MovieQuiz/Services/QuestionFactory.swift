@@ -69,7 +69,7 @@ class QuestionFactory: QuestionFactoryProtocol {
                     let myError = MyError()
                     self.delegate?.didFailToLoadData(with: myError)
                 }
-                
+            }
                 let rating = Float(movie.rating) ?? 0
                 let randomArrayRating = 6...9
                 let randomRating = randomArrayRating.randomElement() ?? 7
@@ -87,5 +87,5 @@ class QuestionFactory: QuestionFactoryProtocol {
             }
         }
     }
-    
-}
+
+
