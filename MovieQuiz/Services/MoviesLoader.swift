@@ -18,20 +18,14 @@ struct MoviesLoader: MoviesLoading {
     //MARK: -URL
     
     private var mostPopularMoviesUrl: URL {
-        // Если мы не смогли преобразовать строку в URL, то приложение упадёт с ошибкой
+        
         guard let url = URL(string: "https://imdb-api.com/en/API/Top250Movies/k_y7m73zfd") else {
             preconditionFailure("Unable to construct mostPopularMoviesUrl")
         }
         return url
     }
     
-    /*
-     public enum Result<Success, Failure> where Failure : Error {
-         case success(Success)
-         case failure(Failure)
-     }
-     */
-    
+    //загрузчик фильмов
     func loadMovies(handler: @escaping (Result<MostPopularMovies, Error>) -> Void) {
         networkClient.fech(url: mostPopularMoviesUrl) { result in
             switch result {

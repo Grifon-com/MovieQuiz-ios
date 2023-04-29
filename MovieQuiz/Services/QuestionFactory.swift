@@ -5,10 +5,10 @@ class QuestionFactory: QuestionFactoryProtocol {
     private weak var delegate: QuestionFactoryDelegate?
     
     private var movies: [MostPopularMovie] = []
-
+    
     /* массив вопросов
-    private let questions: [QuizQuestion] =
-    [QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 9,2?", correctAnswer: true),
+     private let questions: [QuizQuestion] =
+     [QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 9,2?", correctAnswer: true),
      QuizQuestion(image: "The Dark Knight", text: "Рейтинг этого фильма больше чем 9?", correctAnswer: true),
      QuizQuestion(image: "Kill Bill", text: "Рейтинг этого фильма больше чем 8,1?", correctAnswer: true),
      QuizQuestion(image: "The Avengers", text: "Рейтинг этого фильма больше чем 8?", correctAnswer: true),
@@ -18,8 +18,14 @@ class QuestionFactory: QuestionFactoryProtocol {
      QuizQuestion(image: "The Ice Age Adventures of Buck Wild", text: "Рейтинг этого фильма больше чем 4,3?", correctAnswer: false),
      QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма больше чем 5,1?", correctAnswer: false),
      QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма больше чем 5,8?", correctAnswer: false)
-    ]
+     ]
      */
+    
+    
+    /// собственная ошибка
+    struct MyError: Error {
+        let localizedDescription = "Failed to load image"
+    }
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
         self.moviesLoder = moviesLoader
@@ -29,21 +35,22 @@ class QuestionFactory: QuestionFactoryProtocol {
     func loadData() {
         moviesLoder.loadMovies {[weak self] result in
             guard let self = self else { return }
-            switch result {
-                
-            case .success(let mostPopularMovies):
-                self.movies = mostPopularMovies.items // сохраняем фильм в нашу новую переменную
-                self.delegate?.didLoadDataFromServer() // сообщаем, что данные загрузились
-            case .failure(let error):
-                self.delegate?.didFailToLoadData(with: error)
+            DispatchQueue.main.async {
+                /// проверяем ответ с сервера
+                switch result {
+                case .success(let mostPopularMovies):
+                    self.movies = mostPopularMovies.items /// сохраняем фильмы в нашу новую переменную
+                    self.delegate?.didLoadDataFromServer() /// сообщаем, что данные загрузились
+                case .failure(let error):
+                    self.delegate?.didFailToLoadData(with: error) /// сообщаем о ошибке
+                }
             }
         }
     }
     
-    //получаем случайный вопрос
+    //получаем случайный фильм
     func requestNextQuestion() {
-        DispatchQueue.global().async {
-            [weak self] in
+        DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             let index = (0..<self.movies.count).randomElement() ?? 0
             
@@ -52,26 +59,33 @@ class QuestionFactory: QuestionFactoryProtocol {
             var imageData = Data()
             
             do {
-                imageData = try Data(contentsOf: movie.imageURL)
+                imageData = try Data(contentsOf: movie.resizedImageURL)
             } catch {
                 print("Failed to load image")
-            }
-            
-            let rating = Float(movie.rating) ?? 0
-            
-            let text = "Рейтинг этого фильма больше чем 7?"
-            let correctAnswer = rating > 7
-            
-            let question = QuizQuestion(image: imageData,
-                                        text: text,
-                                        correctAnswer: correctAnswer)
-            
-            DispatchQueue.global().async { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.didReceiveNextQuestion(question: question)
+                /// ???????
+                /// здесь я решил попробовать создать свою ошибку и в случае неудачной загрузки картинки передать ошибку как сообщение для алерта (прошу не защитывать как ошибку🙏)
+                DispatchQueue.main.async {[weak self] in
+                    guard let self = self else {return}
+                    let myError = MyError()
+                    self.delegate?.didFailToLoadData(with: myError)
+                }
+                
+                let rating = Float(movie.rating) ?? 0
+                let randomArrayRating = 6...9
+                let randomRating = randomArrayRating.randomElement() ?? 7
+                let text = "Рейтинг этого фильма больше чем \(randomRating)?"
+                let correctAnswer = rating > Float(randomRating)
+                
+                let question = QuizQuestion(image: imageData,
+                                            text: text,
+                                            correctAnswer: correctAnswer)
+                
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.didReceiveNextQuestion(question: question)
+                }
             }
         }
-     
     }
     
 }

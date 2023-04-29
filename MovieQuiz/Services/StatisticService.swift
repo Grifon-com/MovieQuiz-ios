@@ -17,35 +17,34 @@ final class StatisticServiceImplementation: StatisticService {
     
     var totalAccuracy: Double {
         get {
-            guard let data = userDefaults.data(forKey: Keys.total.rawValue),
-                  let record = try? JSONDecoder().decode(Double.self, from: data) else {
-                return Double(bestGame.correct) / Double(bestGame.total)
+            if  userDefaults.double(forKey: Keys.total.rawValue) != 0 {
+                let record = userDefaults.double(forKey: Keys.total.rawValue)
+                return record
             }
-            return record
+            else {
+                let beginTotalAccuracy = Double(bestGame.correct) / Double(bestGame.total)
+                return beginTotalAccuracy
+            }
         }
+        
         set {
-            guard let data = try? JSONEncoder().encode(totalAccuracy + newValue) else {
-                print("Невозможно сохранить результат")
-                return
-            }
-            userDefaults.set(data, forKey: Keys.total.rawValue)
+            let totalAccuracyRecord = totalAccuracy + newValue
+            userDefaults.set(totalAccuracyRecord, forKey: Keys.total.rawValue)
         }
     }
     
     var gamesCount: Int {
         get {
-            guard let data = userDefaults.data(forKey: Keys.gamesCount.rawValue),
-                  let recordGamesCount = try? JSONDecoder().decode(Int.self, from: data) else {
+            if userDefaults.integer(forKey: Keys.gamesCount.rawValue) != 0 {
+                let recordGamesCount = userDefaults.integer(forKey: Keys.gamesCount.rawValue)
+                return recordGamesCount
+        }  else {
                 return .init(1)
             }
-            return recordGamesCount
         }
         set {
-            guard let data = try? JSONEncoder().encode(gamesCount + newValue) else {
-                print("Невозможно сохранить результат")
-                return
-            }
-            userDefaults.set(data, forKey: Keys.gamesCount.rawValue)
+            let gamesCountRecord = gamesCount + newValue
+            userDefaults.set(gamesCountRecord, forKey: Keys.gamesCount.rawValue)
         }
     }
     
@@ -76,6 +75,7 @@ final class StatisticServiceImplementation: StatisticService {
 
 // MARK: - GameRecord
 struct GameRecord: Codable, Comparable {
+    /// метод протокола Comparable для сравнения типов GameRecord по свойству correct
     static func < (lhs: GameRecord, rhs: GameRecord) -> Bool {
         lhs.correct < rhs.correct
     }
