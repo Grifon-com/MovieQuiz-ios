@@ -17,14 +17,9 @@ final class StatisticServiceImplementation: StatisticService {
     
     var totalAccuracy: Double {
         get {
-            if  userDefaults.double(forKey: Keys.total.rawValue) != 0 {
-                let record = userDefaults.double(forKey: Keys.total.rawValue)
-                return record
-            }
-            else {
-                let beginTotalAccuracy = Double(bestGame.correct) / Double(bestGame.total)
-                return beginTotalAccuracy
-            }
+            let record =  userDefaults.double(forKey: Keys.total.rawValue) != 0 ? userDefaults.double(forKey: Keys.total.rawValue) : Double(bestGame.correct) / Double(bestGame.total)
+            
+            return record
         }
         
         set {
@@ -35,16 +30,10 @@ final class StatisticServiceImplementation: StatisticService {
     
     var gamesCount: Int {
         get {
-            if userDefaults.integer(forKey: Keys.gamesCount.rawValue) != 0 {
-                let recordGamesCount = userDefaults.integer(forKey: Keys.gamesCount.rawValue)
-                return recordGamesCount
-        }  else {
-                return .init(1)
-            }
+            userDefaults.integer(forKey: Keys.gamesCount.rawValue) ?? 1
         }
         set {
-            let gamesCountRecord = gamesCount + newValue
-            userDefaults.set(gamesCountRecord, forKey: Keys.gamesCount.rawValue)
+            userDefaults.set(newValue, forKey: Keys.gamesCount.rawValue)
         }
     }
     

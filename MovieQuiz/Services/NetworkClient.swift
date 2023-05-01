@@ -14,13 +14,6 @@ struct NetworkClient {
         case codeError
     }
     
-    /*
-     public enum Result<Success, Failure> where Failure : Error {
-         case success(Success)
-         case failure(Failure)
-     }
-     */
-    
     func fech(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
         

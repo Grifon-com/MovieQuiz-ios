@@ -45,18 +45,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         ///показываем первый вопрос
         ///questionFactory?.requestNextQuestion()
         
-        ///отрисовываем рамку 
+        ///отрисовываем рамку
         frameDrawing()
         self.imageView.layer.borderColor = UIColor.clear.cgColor
     }
     
     // MARK: - QuestionFactoryDelegate
-
+    
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
             return
         }
-       
+        
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -101,7 +101,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
         
         frameDrawing()
-        imageView.layer.borderColor = isCorrect ? UIColor.ypRed.cgColor : UIColor.ypGreen.cgColor
+        imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self]  in
             guard let self = self else { return }
@@ -125,9 +125,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             statistic.store(correct: correctAnswers, total: questionsAmount)
             
             /// увеличиваем общее количество сыгранных игр на 1
-            statistic.gamesCount = 1
+            statistic.gamesCount += 1
             
-             /// если игра запущена первый раз statistic.totalAccuracy будет назначен автоматически из результатов statistic.bestGame, если не первый, то к сохраненным результатам каждый раз будет прибавляться текущий результат для отображения статистики в алерте
+            /// если игра запущена первый раз statistic.totalAccuracy будет назначен автоматически из результатов statistic.bestGame, если не первый, то к сохраненным результатам каждый раз будет прибавляться текущий результат для отображения статистики в алерте
             if statistic.gamesCount != 1 {
                 statistic.totalAccuracy = Double(correctAnswers) / Double(questionsAmount)
             }
@@ -147,16 +147,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                                             buttonText: "Сыграть еще раз",
                                             /// completion hendler для действия по нажатию на кнопку алерта
                                             completion: { [weak self] in
-                                            guard let self = self else {return}
+                guard let self = self else {return}
                 
-                                            /// обнуляем индекс текущего вопроса
-                                            self.currentQuestionIndex = 0
+                /// обнуляем индекс текущего вопроса
+                self.currentQuestionIndex = 0
                 
-                                            /// обнуляем счетчик правильных ответов
-                                            self.correctAnswers = 0
+                /// обнуляем счетчик правильных ответов
+                self.correctAnswers = 0
                 
-                                            /// заново показываем первый вопрос
-                                            self.questionFactory?.requestNextQuestion()})
+                /// заново показываем первый вопрос
+                self.questionFactory?.requestNextQuestion()})
             
             alertPresenter?.showAlert(modelAlert: viewAlertModel, vc: self)
         } else {
@@ -180,17 +180,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                                              message: message,
                                              buttonText: "Попробовать ещё раз",
                                              completion: { [weak self] in
-                                                        guard let self = self else {return}
-
-                                                        // обнуляем индекс текущего вопроса
-                                                        self.currentQuestionIndex = 0
-
-                                                        // обнуляем счетчик правильных ответов
-                                                        self.correctAnswers = 0
-
+            guard let self = self else {return}
             
-                                                        // заново показываем первый вопрос
-                                                        self.questionFactory?.requestNextQuestion()})
+            // обнуляем индекс текущего вопроса
+            self.currentQuestionIndex = 0
+            
+            // обнуляем счетчик правильных ответов
+            self.correctAnswers = 0
+            
+            
+            // заново показываем первый вопрос
+            self.questionFactory?.requestNextQuestion()})
         alertPresenter?.showAlert(modelAlert: alertErrorViewModel, vc: self)
     }
     
@@ -200,7 +200,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         activitiIndicator.startAnimating() /// включаем анимацию
     }
     
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+    
+    @IBAction func yesButton(_ sender: UIButton) {
         guard let currentQuestion = currentQuestion else {
             return
         }
@@ -209,7 +210,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
-    @IBAction  private func noButtonClicked(_ sender: UIButton) {
+    @IBAction func noButton(_ sender: UIButton) {
         guard let currentQuestion = currentQuestion else {
             return
         }
@@ -217,5 +218,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
+    
+    
+    
+    
 }
 

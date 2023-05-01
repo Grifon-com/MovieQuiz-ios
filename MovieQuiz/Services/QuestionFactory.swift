@@ -21,10 +21,11 @@ class QuestionFactory: QuestionFactoryProtocol {
      ]
      */
     
-    
     /// собственная ошибка
-    struct MyError: Error {
-        let localizedDescription = "Failed to load image"
+    enum MyError: Error {
+        case loadImage
+        
+        var localizedDescription: String { "Failed to load image"}
     }
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
@@ -62,30 +63,35 @@ class QuestionFactory: QuestionFactoryProtocol {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
             } catch {
                 print("Failed to load image")
-                /// ???????
-                /// здесь я решил попробовать создать свою ошибку и в случае неудачной загрузки картинки передать ошибку как сообщение для алерта (прошу не защитывать как ошибку🙏)
                 DispatchQueue.main.async {[weak self] in
                     guard let self = self else {return}
-                    let myError = MyError()
-                    self.delegate?.didFailToLoadData(with: myError)
+                    let myError = MyError.self
+                    self.delegate?.didFailToLoadData(with: myError.loadImage)
                 }
             }
-                let rating = Float(movie.rating) ?? 0
-                let randomArrayRating = 6...9
-                let randomRating = randomArrayRating.randomElement() ?? 7
-                let text = "Рейтинг этого фильма больше чем \(randomRating)?"
-                let correctAnswer = rating > Float(randomRating)
-                
-                let question = QuizQuestion(image: imageData,
-                                            text: text,
-                                            correctAnswer: correctAnswer)
-                
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.didReceiveNextQuestion(question: question)
+            let rating = Float(movie.rating) ?? 0
+            print(rating)
+            let randomRating = (6...9).randomElement() ?? 7
+            let randomNamber = (1...2).randomElement() ?? 1
+            
+            ///вычисляем tuples из вопроса и результата  сравнения рейтинга с рандомным числом в зависимости от randomNamber
+            var textAndCorrectAnswer: (String, Bool) {
+                switch randomNamber {
+                case 1: return ("Рейтинг этого фильма больше чем \(randomRating)?", rating > Float(randomRating))
+                case 2: return ("Рейтинг этого фильма меньше чем \(randomRating)?", rating < Float(randomRating))
+                default: return ("Рейтинг этого фильма равен \(randomRating)?", rating == Float(randomRating))
                 }
+            }
+            
+            let question = QuizQuestion(image: imageData,
+                                        text: textAndCorrectAnswer.0,
+                                        correctAnswer: textAndCorrectAnswer.1)
+            
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.didReceiveNextQuestion(question: question)
             }
         }
     }
-
+}
 
