@@ -70,7 +70,6 @@ class QuestionFactory: QuestionFactoryProtocol {
                 }
             }
             let rating = Float(movie.rating) ?? 0
-            print(rating)
             let randomRating = (6...9).randomElement() ?? 7
             let randomNamber = (1...2).randomElement() ?? 1
             
