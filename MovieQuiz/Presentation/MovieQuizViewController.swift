@@ -52,7 +52,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
         
         currentQuestion = question
-        let viewModel = convert(model: question)
+        let viewModel = presenter.convert(model: question)
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
@@ -66,15 +66,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     /// метод сообщает  об ошибке загрузки
     func didFailToLoadData(with error: Error) {
         showNetworkError(message: error.localizedDescription)
-    }
-    
-    /// метод конвертации, который принимает  вопрос и возвращает вью модель для экрана вопроса
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        
-        let questionStep = QuizStepViewModel(image: UIImage(data: model.image) ?? UIImage(),
-                                             question: model.text,
-                                             questionNumber: "\(presenter.currentQuestionIndex + 1)/\(presenter.questionsAmount)")
-        return questionStep
     }
     
     /// приватный метод вывода на экран вопроса, который принимает на вход вью

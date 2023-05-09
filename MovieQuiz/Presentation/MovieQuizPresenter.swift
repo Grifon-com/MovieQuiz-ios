@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 
 final class MovieQuizPresenter {
-    private let questionsAmount: Int = 10
+    let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
     
     /// метод конвертации, который принимает  вопрос и возвращает вью модель для экрана вопроса
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
+    func convert(model: QuizQuestion) -> QuizStepViewModel {
         
         let questionStep = QuizStepViewModel(image: UIImage(data: model.image) ?? UIImage(),
                                              question: model.text,
