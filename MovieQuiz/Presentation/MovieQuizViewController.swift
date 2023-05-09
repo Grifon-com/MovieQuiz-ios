@@ -11,17 +11,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     @IBOutlet private weak var activitiIndicator: UIActivityIndicatorView!
     
-    private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenter?
     private var statistic: StatisticService?
-    
-    /// переменная с индексом текущего вопроса, начальное значение 0
-    /// (по этому индексу будем искать вопрос в массиве, где индекс первого элемента
-    /// 0, а не 1)
-    
-    private var currentQuestionIndex = 0
+    private let presenter = MovieQuizPresenter()
     
     /// переменная со счётчиком правильных ответов, начальное значение 0
     private var correctAnswers = 0
@@ -79,7 +73,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         let questionStep = QuizStepViewModel(image: UIImage(data: model.image) ?? UIImage(),
                                              question: model.text,
-                                             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
+                                             questionNumber: "\(presenter.currentQuestionIndex + 1)/\(presenter.questionsAmount)")
         return questionStep
     }
     
@@ -116,20 +110,20 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     ///метод ничего не принимает и ничего не возвращает
     
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questionsAmount - 1 {
+        if presenter.isLastQuestion() {
             
             //извлекаем опционал
             guard var statistic = statistic else { return }
             
             /// метод сравнения текущего результата игры с сохраненным
-            statistic.store(correct: correctAnswers, total: questionsAmount)
+            statistic.store(correct: correctAnswers, total: presenter.questionsAmount)
             
             /// увеличиваем общее количество сыгранных игр на 1
             statistic.gamesCount += 1
             
             /// если игра запущена первый раз statistic.totalAccuracy будет назначен автоматически из результатов statistic.bestGame, если не первый, то к сохраненным результатам каждый раз будет прибавляться текущий результат для отображения статистики в алерте
             if statistic.gamesCount != 1 {
-                statistic.totalAccuracy = Double(correctAnswers) / Double(questionsAmount)
+                statistic.totalAccuracy = Double(correctAnswers) / Double(presenter.questionsAmount)
             }
             
             /// высчитываем среднюю точность в процентах
@@ -139,7 +133,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             let record = statistic.bestGame
             
             /// текст для Alert.message
-            let text = "Ваш результат: \(correctAnswers)/\(questionsAmount)\n Количество сыгранных квизов: \(String(describing: statistic.gamesCount))\nРекорд: \(record.correct)/\(record.total) (\(record.date))\nСредняя точность: \(String(format: "%.2f", averageAccuracy))%"
+            let text = "Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)\n Количество сыгранных квизов: \(String(describing: statistic.gamesCount))\nРекорд: \(record.correct)/\(record.total) (\(record.date))\nСредняя точность: \(String(format: "%.2f", averageAccuracy))%"
             
             /// создаем AlertModel
             let viewAlertModel = AlertModel(title: "Этот раунд окончен!",
@@ -150,7 +144,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 guard let self = self else {return}
                 
                 /// обнуляем индекс текущего вопроса
-                self.currentQuestionIndex = 0
+                self.presenter.resetQuestionIndex()
                 
                 /// обнуляем счетчик правильных ответов
                 self.correctAnswers = 0
@@ -160,7 +154,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             
             alertPresenter?.showAlert(modelAlert: viewAlertModel, vc: self)
         } else {
-            currentQuestionIndex += 1
+            presenter.switchToNextQuestion()
             /// идём в состояние "Вопрос показан"
             questionFactory?.requestNextQuestion()
         }
@@ -183,7 +177,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             guard let self = self else {return}
             
             // обнуляем индекс текущего вопроса
-            self.currentQuestionIndex = 0
+            self.presenter.resetQuestionIndex()
             
             // обнуляем счетчик правильных ответов
             self.correctAnswers = 0
