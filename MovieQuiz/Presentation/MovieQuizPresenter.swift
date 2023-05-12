@@ -101,7 +101,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     ///"ДА" и "НЕТ" принимает на вход булевое значение и ничего не возвращает
     private func proceedWhithAnswer(isCorrect: Bool) {
         self.didAnswers(isCorrectAnswer: isCorrect)
-        self.viewController?.highhligghtImageBorder(isCorrectAnswer: isCorrect)
+        self.viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self]  in
             guard let self = self else { return }

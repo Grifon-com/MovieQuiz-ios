@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, MovieQuiezViewControllerProtocol {
     // MARK: - Lifecycle
     
     @IBOutlet private weak var imageView: UIImageView!
@@ -42,7 +42,7 @@ final class MovieQuizViewController: UIViewController {
         self.view.isUserInteractionEnabled = true
     }
     
-    func highhligghtImageBorder(isCorrectAnswer: Bool) {
+    func highlightImageBorder(isCorrectAnswer: Bool) {
         //отключаем взаимодействие с экраном во избежание множественного нажатия и некорректной работы
         self.view.isUserInteractionEnabled = false
         
