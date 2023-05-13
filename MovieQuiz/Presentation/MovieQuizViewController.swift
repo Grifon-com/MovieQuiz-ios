@@ -100,6 +100,7 @@ final class MovieQuizViewController: UIViewController, MovieQuiezViewControllerP
         
         //добавляем кнопку к алерту
         alert.addAction(action)
+        alert.view.accessibilityIdentifier = "Game result"
         
         //разрешаем показ алерта
         self.present(alert, animated: true, completion: nil)

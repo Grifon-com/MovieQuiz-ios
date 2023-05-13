@@ -8,7 +8,6 @@
 import XCTest
 
 class MovieQuizUITests: XCTestCase {
-    // swiftlint:disable:next implicitly_unwrapped_optional
     var app: XCUIApplication!
     
     override func setUpWithError() throws {
@@ -18,9 +17,9 @@ class MovieQuizUITests: XCTestCase {
         app.launch()
         
         continueAfterFailure = false
-
+        
     }
-
+    
     override func tearDownWithError() throws {
         try super.tearDownWithError()
         
@@ -55,9 +54,46 @@ class MovieQuizUITests: XCTestCase {
         app.buttons["No"].tap()
         sleep(3)
         
+        let textIndex = app.staticTexts["Index"]
+        
         let secondPoster = app.images["Poster"]
         let secondPosterData = secondPoster.screenshot().pngRepresentation
         
         XCTAssertFalse(firstPosterData == secondPosterData)
+        XCTAssertEqual(textIndex.label, "2/10")
+    }
+    
+    func testShowAlert() {
+        for _ in 1...10 {
+            app.buttons["No"].tap()
+            sleep(2)
+        }
+        
+        let alert = app.alerts["Game result"]
+        
+        let alertTextTitle = alert.label
+        let alertTextButton = alert.buttons.firstMatch.label
+        
+        XCTAssertTrue(alert.exists)
+        XCTAssertTrue(alertTextTitle == "Этот раунд окончен!")
+        XCTAssertTrue(alertTextButton == "Сыграть еще раз")
+    }
+    
+    func testAlertDismiss() {
+        sleep(2)
+        for _ in 1...10 {
+            app.buttons["No"].tap()
+            sleep(2)
+        }
+        
+        let alert = app.alerts["Game result"]
+        alert.buttons.firstMatch.tap()
+        
+        sleep(2)
+        
+        let textLable = app.staticTexts["Index"]
+        
+        XCTAssertFalse(alert.exists)
+        XCTAssertEqual(textLable.label, "1/10")
     }
 }
