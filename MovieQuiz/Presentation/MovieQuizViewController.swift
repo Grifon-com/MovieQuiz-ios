@@ -38,7 +38,7 @@ final class MovieQuizViewController: UIViewController, MovieQuiezViewControllerP
     }
     
     func trueUserInteractionEnabled() {
-        self.imageView.layer.borderColor = UIColor.ypBlack.cgColor
+        self.imageView.layer.borderColor = UIColor.clear.cgColor
         self.view.isUserInteractionEnabled = true
     }
     
