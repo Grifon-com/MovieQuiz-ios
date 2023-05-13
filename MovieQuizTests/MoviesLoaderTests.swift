@@ -2,7 +2,7 @@
 //  MoviesLoaderTests.swift
 //  MovieQuizTests
 //
-//  Created by Марина Машук on 5.05.23.
+//  Created by Григорий Машук on 5.05.23.
 //
 
 import Foundation

@@ -2,12 +2,12 @@
 //  MovieQuizUITests.swift
 //  MovieQuizUITests
 //
-//  Created by Марина Машук on 12.05.23.
+//  Created by Григорий Машук on 12.05.23.
 //
 
 import XCTest
 
-class MovieQuizUITests: XCTestCase {
+final class MovieQuizUITests: XCTestCase {
     var app: XCUIApplication!
     
     override func setUpWithError() throws {
