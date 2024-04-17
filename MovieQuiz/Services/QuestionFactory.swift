@@ -25,7 +25,11 @@ class QuestionFactory: QuestionFactoryProtocol {
     enum MyError: Error {
         case loadImage
         
-        var localizedDescription: String { "Failed to load image"}
+        var localizedDescription: String {
+            switch self {
+            case .loadImage: return "Failed to load image"
+            }
+        }
     }
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
@@ -65,12 +69,10 @@ class QuestionFactory: QuestionFactoryProtocol {
                 print("Failed to load image")
                 DispatchQueue.main.async {[weak self] in
                     guard let self = self else {return}
-                    let myError = MyError.self
-                    self.delegate?.didFailToLoadData(with: myError.loadImage)
-                }
+                    self.delegate?.didFailToLoadData(with: MyError.loadImage)}
             }
             let rating = Float(movie.rating) ?? 0
-            let randomRating = (6...9).randomElement() ?? 7
+            let randomRating = (7...9).randomElement() ?? 7
             let randomNamber = (1...2).randomElement() ?? 1
             
             ///вычисляем tuples из вопроса и результата  сравнения рейтинга с рандомным числом в зависимости от randomNamber
